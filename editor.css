@@ -1,0 +1,28 @@
+#wrapper {
+width: 640;
+height: 360;
+padding: 0; 
+overflow: hidden;
+border: 1px solid black;
+}
+#svg {
+-ms-zoom: 0.5;
+-moz-transform: scale(0.5);
+-moz-transform-origin: 0px 0;
+-o-transform: scale(0.5);
+-o-transform-origin: 0 0;
+-webkit-transform: scale(0.5);
+-webkit-transform-origin: 0 0;
+}
+
+#head {
+  font-family: 'Franklin Gothic Heavy';
+  font-weight: normal;
+  font-size: 30;
+}
+
+#text {
+  font-family: 'Franklin Gothic Heavy';
+  font-weight: normal;
+  font-size: 20;
+}
