@@ -2,7 +2,6 @@
 <head>
 <script>
 var SVG;
-var CODE;
 var SVG_HEAD;
 var SVG_TEXT;
 var INPUT_TEXT;
@@ -12,17 +11,19 @@ var svgNS = "http://www.w3.org/2000/svg";
 var xmlNS = "http://www.w3.org/XML/1998/namespace";
 
 function prepare(){
-  CODE=document.getElementById("code");
   INPUT_TEXT=document.getElementById("text");
+  INPUT_TEXT.addEventListener('input', update, false);
+  INPUT_TEXT.wrap='off';
   INPUT_HEAD=document.getElementById("head");
+  INPUT_HEAD.addEventListener('input', update, false);
+  INPUT_HEAD.wrap='off';
+
   var S=document.getElementById("svg");
   try{SVG=S.contentDocument}
   catch(err){SVG=S.getSVGDocument}
+
   SVG_TEXT=SVG.getElementById('slide_content');
   SVG_HEAD=SVG.getElementById('header');
-
-  INPUT_TEXT.value=get_multiline_text(SVG_TEXT);
-  INPUT_HEAD.value=get_multiline_text(SVG_HEAD);
 }
 
 function clear_element(element) {
@@ -45,36 +46,29 @@ function set_multiline_text(output, input) {
   }
 }
 
-function get_multiline_text(element) {
-  var tspans=element.getElementsByTagName("tspan");
-  var text="";
-  var child = element.firstChild;
-  while (child != null) {
-    if (child.nodeName == "tspan" && child.hasChildNodes()) {
-      if (child.firstChild.nodeType == 3) {
-        text += child.firstChild.nodeValue.replace(/\n/g, "").replace(/^\s*$/, "") + "\n";
-      }
-    }
-    child = child.nextSibling;
-  }
-  return text;
-}
-
 function update(){
   set_multiline_text(SVG_HEAD, INPUT_HEAD);
   set_multiline_text(SVG_TEXT, INPUT_TEXT);
 }
 
+function onload() {
+  prepare();
+  update();
+};
+
+window.addEventListener ?  window.addEventListener("load",onload,false) : 
+window.attachEvent && window.attachEvent("onload",onload);
+
 </script>
 <style>
-div {
+#wrapper {
 width: 640;
 height: 360;
 padding: 0; 
 overflow: hidden;
 border: 1px solid black;
 }
-object {
+#svg {
 -ms-zoom: 0.5;
 -moz-transform: scale(0.5);
 -moz-transform-origin: 0px 0;
@@ -84,32 +78,40 @@ object {
 -webkit-transform-origin: 0 0;
 }
 
-input {
+#head {
   font-family: 'Franklin Gothic Heavy';
   font-weight: normal;
   font-size: 30;
-  overflow: hidden;
 }
 
-textarea {
+#text {
   font-family: 'Franklin Gothic Heavy';
   font-weight: normal;
   font-size: 20;
-  overflow: hidden;
 }
 
 </style>
 <title>Simple svg-editor</title>
 </head>
-<body onload="prepare()">
 
-<input type="text" oninput="update()" id="head" size="36"></input>
+
+<body onload="prepare(); update();">
+<form>
+<textarea type="text" id="head" name="head" rows="1" cols="36" wrap="off">
+New Heading
+</textarea>
 <br/>
-<textarea id="text" oninput="update()" rows="11" cols="51"></textarea>
-<button onclick="change()">Update</button>
-<div>
+<textarea id="text" name="text" rows="11" cols="51">
+Things
+   to
+      say
+
+in this multiline slide...
+</textarea>
+<button>Submit</button>
+</form>
+<div id="wrapper">
 <object id="svg" type="image/svg+xml" data="test.svg"></object>
 </div>
-<pre id="code"></code>
 </body>
 </html>
