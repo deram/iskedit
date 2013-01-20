@@ -34,10 +34,10 @@ function clear_element(element) {
   }
 }
 
-function create_emphasis_tspan(text) {
+function create_text_tspan(text, color) {
   var tspan = document.createElementNS(svgNS, "tspan");
   tspan.appendChild(SVG.createTextNode(text));
-  tspan.setAttributeNS(null, "fill", "#FF5500");
+  if (color) tspan.setAttributeNS(null, "fill", color);
   return tspan;
 }
 
@@ -47,9 +47,9 @@ function create_line_tspan(text) {
   tspan.setAttributeNS(xmlNS, "xml:space", "preserve");
   for (var i in array) {
     if (i%2) {
-      if (array[i]) tspan.appendChild(create_emphasis_tspan(array[i]));
+      if (array[i]) tspan.appendChild(create_text_tspan(array[i], "#FF5500"));
     } else {
-      if (array[i]) tspan.appendChild(SVG.createTextNode(array[i]));
+      if (array[i]) tspan.appendChild(create_text_tspan(array[i]));
     }
   }
   tspan.appendChild(SVG.createTextNode(" "));
