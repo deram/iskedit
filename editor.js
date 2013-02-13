@@ -10,6 +10,9 @@ var CODE;
 var SERIALIZE;
 var TEMPLATE_TEXT_X;
 var TEMPLATE_WIDTH;
+var BUTTON_NEXT;
+var CSV;
+var CSV_LINE="init";
 
 var svgNS = "http://www.w3.org/2000/svg";
 var xmlNS = "http://www.w3.org/XML/1998/namespace";
@@ -31,6 +34,11 @@ function prepare(){
   INPUT_HEAD=document.getElementById("head");
   INPUT_HEAD.addEventListener('input', update, false);
   INPUT_HEAD.wrap='off';
+
+  CSV=document.getElementById("csv");
+
+  BUTTON_NEXT=document.getElementById("next");
+  BUTTON_NEXT.addEventListener('click', next, false);
 
   CODE=document.getElementById("code");
 
@@ -126,6 +134,34 @@ function update(){
 
   CODE.value=SERIALIZE.serializeToString(SVG);
 }
+
+function read_csv(line) {
+  var splitted=line.split(';');
+  INPUT_HEAD.value=splitted[0];
+  splitted.shift();
+  INPUT_TEXT.value=splitted.join('\n');
+  update();
+}
+
+function write_csv() {
+  var ret=[INPUT_HEAD.value];
+  var textarray=INPUT_TEXT.value.split(/\r\n|\n|\r/);
+  ret=ret.concat(textarray);
+  return ret.join(';');
+}
+
+function next() {
+  var linearray=CSV.value.split(/\r\n|\n|\r/);
+  if (CSV_LINE=="init") {
+    CSV_LINE=0;
+  } else {
+    linearray[CSV_LINE]=write_csv();
+    CSV.value=linearray.join('\n');
+    CSV_LINE++;
+  }
+  read_csv(linearray[CSV_LINE]);
+}
+
 
 function onload() {
   prepare();
